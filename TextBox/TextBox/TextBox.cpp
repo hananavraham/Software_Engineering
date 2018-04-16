@@ -71,3 +71,35 @@ void TextBox::draw() {
     SetConsoleCursorPosition(out, info.dwCursorPosition);
 
 }
+
+void TextBox::checkKeyEvent(HANDLE in)
+{
+    INPUT_RECORD ir;
+    DWORD count = 1;
+    ReadConsoleInput(in, &ir, 1, &count);
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO info;
+    switch (ir.EventType)
+    {
+    case KEY_EVENT:
+        if (ir.Event.KeyEvent.bKeyDown)
+        {
+            GetConsoleScreenBufferInfo(out, &info);
+            if (ir.Event.KeyEvent.uChar.AsciiChar == 8)
+            {
+                if (info.dwCursorPosition.X - 1 == this->getPosition().X)    // if we trying to delete char but we in text border position
+                    break;
+                cout << '\x08';
+                cout << '\x0';
+            }
+
+            else if (info.dwCursorPosition.X == this->getPosition().X + this->getSize())    // if we trying to exceed the textbox border
+                break;
+
+            cout << ir.Event.KeyEvent.uChar.AsciiChar;      // printing the selected key
+        }
+
+
+
+    }
+}

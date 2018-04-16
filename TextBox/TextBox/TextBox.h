@@ -35,6 +35,8 @@ public:
     void setForeground(DWORD fg);
     void setSize(int size);
 
+    void checkKeyEvent(HANDLE in);
+
     void draw();
 
     ~TextBox();
