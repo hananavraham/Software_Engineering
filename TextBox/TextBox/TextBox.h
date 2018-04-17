@@ -13,6 +13,8 @@ private:
     DWORD bg;
     DWORD fg;
 
+    void setCursorPosit(COORD point, HANDLE out, CONSOLE_SCREEN_BUFFER_INFO info);
+
 public:
     TextBox(int size, COORD pos) : position(pos) , size(size){
         this->bg = 0;
@@ -35,7 +37,7 @@ public:
     void setForeground(DWORD fg);
     void setSize(int size);
 
-    void checkKeyEvent(HANDLE in);
+    void checkKeyEvent();
 
     void draw();
 

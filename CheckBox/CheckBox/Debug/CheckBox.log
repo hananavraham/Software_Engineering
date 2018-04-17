@@ -1,3 +1,4 @@
-﻿  Source.cpp
-  CheckBox.vcxproj -> c:\users\hananavr\documents\visual studio 2015\Projects\CheckBox\Debug\CheckBox.exe
-  CheckBox.vcxproj -> c:\users\hananavr\documents\visual studio 2015\Projects\CheckBox\Debug\CheckBox.pdb (Partial PDB)
+﻿  CheckBox.cpp
+c:\users\hananavr\documents\visual studio 2015\projects\checkbox\checkbox\checkbox.cpp(15): warning C4244: 'argument': conversion from 'unsigned long' to 'WORD', possible loss of data
+  CheckBox.vcxproj -> C:\Users\hananavr\Documents\Visual Studio 2015\Projects\CheckBox\Debug\CheckBox.exe
+  CheckBox.vcxproj -> C:\Users\hananavr\Documents\Visual Studio 2015\Projects\CheckBox\Debug\CheckBox.pdb (Partial PDB)

@@ -11,6 +11,8 @@ private:
     DWORD bg;
     DWORD fg;
     bool IsChecked;
+    void CheckAndMark(HANDLE out, CONSOLE_SCREEN_BUFFER_INFO info);
+    void SetCursorPosit(COORD point, HANDLE out, CONSOLE_SCREEN_BUFFER_INFO info);
 
 public:
     CheckBox(COORD pos) : position(pos){
@@ -23,15 +25,13 @@ public:
         return position;
     }
 
-    void setChecked(bool checked) {
-        this->IsChecked = checked;
-    }
-
     bool getChecked() {
         return this->IsChecked;
     }
 
     void draw();
+    void checkEvents();
+
 public:
     CheckBox();
     ~CheckBox();
