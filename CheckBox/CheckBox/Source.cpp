@@ -2,7 +2,7 @@
 
 int main(int argc, char** argv) {
 
-    CheckBox t({ 10,10 });
+    CheckBox t({ 10,10 }, 3);
     t.draw();
 
     while(1)

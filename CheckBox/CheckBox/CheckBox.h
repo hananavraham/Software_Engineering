@@ -10,15 +10,20 @@ private:
     COORD position;
     DWORD bg;
     DWORD fg;
-    bool IsChecked;
-    void CheckAndMark(HANDLE out, CONSOLE_SCREEN_BUFFER_INFO info);
+    int boxes;
+    int currentBox;
+    bool *IsChecked;
+    void CheckAndMark(HANDLE out, CONSOLE_SCREEN_BUFFER_INFO info , int BoxIndex);
     void SetCursorPosit(COORD point, HANDLE out, CONSOLE_SCREEN_BUFFER_INFO info);
 
 public:
-    CheckBox(COORD pos) : position(pos){
+    CheckBox(COORD pos, int boxes) : position(pos) , boxes(boxes){
+        this->IsChecked = new bool[this->boxes];
         this->bg = 0;
         this->fg = FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-        this->IsChecked = false;
+        for (int i = 0 ; i < this->boxes ; ++i)
+            this->IsChecked[i] = false;
+        this->currentBox = 0;
     };
 
     COORD getPosition() {

@@ -8,29 +8,38 @@ CheckBox::CheckBox()
 
 void CheckBox::draw()
 {
+    COORD pos = this->position;
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO info;
     GetConsoleScreenBufferInfo(out, &info);
     SetConsoleCursorPosition(out, this->position);
     SetConsoleTextAttribute(out, this->fg | this->bg);
+    for (int i = 0; i < this->boxes; ++i)
+    {
+        cout << '\xDA';
+        cout << '\xC4';
+        cout << '\xBF';
 
-    cout << '\xDA'; 
-    cout << '\xC4';
-    cout << '\xBF';
+        SetCursorPosit({ pos.X , pos.Y + 1}, out, info);
 
-    SetCursorPosit({ this->position.X , this->position.Y + 1 }, out, info);
+        cout << '\xB3';
 
-    cout << '\xB3';
+        SetCursorPosit({ pos.X + 2 , pos.Y + 1}, out, info);
 
-    SetCursorPosit({ this->position.X + 2 , this->position.Y + 1 }, out, info);
+        cout << '\xB3';
+        SetCursorPosit({ pos.X , pos.Y + 2}, out, info);
 
-    cout << '\xB3';
-    SetCursorPosit({ this->position.X , this->position.Y + 2 }, out, info);
+        cout << '\xC0';
+        cout << '\xC4';
+        cout << '\xD9';
+        SetCursorPosit({ pos.X , pos.Y + 1}, out, info);
 
-    cout << '\xC0';
-    cout << '\xC4';
-    cout << '\xD9';
+        pos = {pos.X , pos.Y + 3};
+        SetCursorPosit(pos,out,info);
+    }
+
     SetCursorPosit({ this->position.X + 1 , this->position.Y + 1 }, out, info);
+    
 
 }
 
@@ -52,36 +61,59 @@ void CheckBox::checkEvents()
             {
                 if (ir.Event.KeyEvent.uChar.AsciiChar == 32)     // checking if its "Space" key
                 {
-                    CheckAndMark(out, info);
+                    CheckAndMark(out, info ,this->currentBox);
+                }
+
+                else if (ir.Event.KeyEvent.uChar.AsciiChar == 9)
+                {
+                    this->currentBox += 1;
+                    if (this->currentBox >= this->boxes)
+                    {
+                        this->currentBox = 0;
+                        SetCursorPosit({ this->position.X + 1, this->position.Y + 1 }, out, info);
+                    }
+                    
+                    else    
+                        SetCursorPosit({this->position.X +1, (SHORT)(this->position.Y + this-> currentBox * 3 +1)}, out,info);
                 }
             }
             break;
 
         case MOUSE_EVENT:   // checking if left mouse button pressed
+            COORD pos = this->position;
             if (ir.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
-                if (ir.Event.MouseEvent.dwMousePosition.X == this->position.X + 1 &&
-                    ir.Event.MouseEvent.dwMousePosition.Y == this->position.Y + 1)
+            {                
+                for (int i = 0; i < this->boxes; ++i)
                 {
-                    CheckAndMark(out, info);
+                    if (ir.Event.MouseEvent.dwMousePosition.X == pos.X + 1 && ir.Event.MouseEvent.dwMousePosition.Y == pos.Y + 1)
+                    {
+                        CheckAndMark(out, info, i);
+                    }
+                    pos = { pos.X , pos.Y + 3 };
                 }
+            }
+                
     }
 }
 
 // this function check if event happend inside the CheckBox
-void CheckBox::CheckAndMark(HANDLE out, CONSOLE_SCREEN_BUFFER_INFO info)
+void CheckBox::CheckAndMark(HANDLE out, CONSOLE_SCREEN_BUFFER_INFO info , int BoxIndex)
 {
-    if (!this->IsChecked)
+    if (!this->IsChecked[BoxIndex])
     {
+        SetCursorPosit({ this->position.X + 1 , (SHORT)(this->position.Y + BoxIndex * 3 + 1) }, out, info);
         cout << 'X';
-        this->IsChecked = true;
-        SetCursorPosit({ this->position.X + 1 , this->position.Y + 1 }, out , info);
+        this->IsChecked[BoxIndex] = true;
+        SetCursorPosit({ this->position.X + 1 , (SHORT)(this->position.Y + BoxIndex * 3 + 1) }, out , info);
     }
     else
     {
+        SetCursorPosit({ this->position.X + 1 , (SHORT)(this->position.Y + BoxIndex * 3 + 1) }, out, info);
         cout << '\x20';
-        this->IsChecked = false;
-        SetCursorPosit({ this->position.X + 1 , this->position.Y + 1 }, out, info);
+        this->IsChecked[BoxIndex] = false;
+        SetCursorPosit({ this->position.X + 1 , (SHORT)(this->position.Y + BoxIndex * 3 + 1) }, out, info);
     }
+    this->currentBox = BoxIndex;
 }
 
 // this function set the cursorPosition
